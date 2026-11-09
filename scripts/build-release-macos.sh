@@ -20,4 +20,12 @@ npm --prefix desktop ci --no-audit --no-fund
 cd desktop
 npm exec tauri build -- --target aarch64-apple-darwin --config src-tauri/tauri.macos-release.conf.json --bundles dmg
 
-find src-tauri/target/aarch64-apple-darwin/release/bundle/dmg -name '*.dmg'
+dmg_dir="src-tauri/target/aarch64-apple-darwin/release/bundle/dmg"
+find "$dmg_dir" -name '*.dmg' -print
+cat <<'EOF'
+
+[INFO] This ad-hoc signed, non-notarized app requires a one-time Gatekeeper approval.
+After copying Speech Studio.app from the mounted DMG to Applications, Control-click
+the app, choose Open, then confirm Open in the dialog. This approves only this app.
+Only approve a build you trust; do not disable Gatekeeper.
+EOF

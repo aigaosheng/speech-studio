@@ -4,6 +4,13 @@ What changed, newest first. Dates are release dates; the app is versioned by its
 build. Every change a user can see is written here in the commit that makes it, and the
 release notes on GitHub are taken from the release's section.
 
+## Unreleased
+
+### Fixed
+
+- **macOS first launch**: the build script and README direct users to approve the app from Finder, without relying on an unavailable “Open Anyway” button or disabling system security.
+- **The macOS app opens on first run**: missing ONNX Runtime is no longer a startup panic when that platform defines only one runtime candidate; the app can now open and download the runtime.
+
 ## 0.4.0 — 2026-11-03
 
 ### Added

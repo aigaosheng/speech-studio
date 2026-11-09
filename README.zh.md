@@ -310,7 +310,7 @@ Linux x86-64 的 .deb 和 AppImage 为**实验性**：同一份代码，配上�
 
 ### macOS（实验性）
 
-适用于 Apple silicon 上 macOS 13 或更新版本的 .dmg 同样是**实验性**的：同样引擎的 macOS 构建，运行于 Metal，作者没有在真实的 Mac 上运行过。那里没有 Drama 3，它只在 NVIDIA 显卡上运行。程序为 ad hoc 签名且未经公证，所以 macOS 会拦下首次启动：请在“系统设置 → 隐私与安全性”中点一次**仍要打开**。模型和引擎存放在 `~/Library/Application Support/Speech Studio`。
+适用于 Apple silicon 上 macOS 13 或更新版本的 .dmg 同样是**实验性**的：同样引擎的 macOS 构建，运行于 Metal，作者没有在真实的 Mac 上运行过。那里没有 Drama 3，它只在 NVIDIA 显卡上运行。程序采用 ad hoc 签名且未经公证，因此 Gatekeeper 会阻止首次启动。将程序复制到“应用程序”后，在 Finder 中按住 Control 键并点按 Speech Studio，选择“打开”，再在对话框中确认“打开”。此操作只会批准 Speech Studio；无需在系统设置中寻找**仍要打开**按钮。请仅批准你信任的构建，例如从此仓库自行构建或从其官方发布页下载的版本。模型和引擎存放在 `~/Library/Application Support/Speech Studio`。
 
 ## 匿名统计与新闻
 

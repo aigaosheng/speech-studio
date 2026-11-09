@@ -310,7 +310,7 @@ Le .deb et l’AppImage pour Linux x86-64 sont **expérimentaux** : le même cod
 
 ### macOS (expérimental)
 
-Le .dmg pour macOS 13 ou plus récent sur Apple silicon est lui aussi **expérimental** : les builds macOS des mêmes moteurs sur Metal, non testés par l’auteur sur un vrai Mac. Drama 3 n’y est pas proposé, il ne tourne que sur les cartes NVIDIA. L’application est signée ad hoc et non notariée, donc macOS bloque le premier lancement : ouvrez-la une fois depuis Réglages Système → Confidentialité et sécurité → **Ouvrir quand même**. Modèles et moteurs vont dans `~/Library/Application Support/Speech Studio`.
+Le .dmg pour macOS 13 ou plus récent sur Apple silicon est lui aussi **expérimental** : les builds macOS des mêmes moteurs sur Metal, non testés par l’auteur sur un vrai Mac. Drama 3 n’y est pas proposé, il ne tourne que sur les cartes NVIDIA. L’application est signée ad hoc et non notariée, donc Gatekeeper bloque le premier lancement. Après avoir copié l’application dans Applications, cliquez sur Speech Studio dans le Finder en maintenant la touche Contrôle, choisissez **Ouvrir**, puis confirmez **Ouvrir** dans la fenêtre. Cette autorisation ne concerne que Speech Studio ; il n’est pas nécessaire de chercher le bouton **Ouvrir quand même** dans Réglages Système. N’autorisez qu’un build auquel vous faites confiance, par exemple compilé depuis ce dépôt ou téléchargé depuis sa publication officielle. Modèles et moteurs vont dans `~/Library/Application Support/Speech Studio`.
 
 ## Statistiques anonymes et actualités
 

@@ -87,6 +87,17 @@ pub fn apply_gpu_choice(repo_root: &Path) {
     }
 }
 
+fn fallback_ort_candidate(candidates: Vec<PathBuf>, prefer_gpu: bool) -> Result<PathBuf, String> {
+    let first = candidates
+        .first()
+        .cloned()
+        .ok_or_else(|| "No ONNX Runtime candidate is defined for this platform".to_string())?;
+    if prefer_gpu {
+        return Ok(first);
+    }
+    Ok(candidates.last().cloned().unwrap_or(first))
+}
+
 pub fn set_ort_dylib_env(repo_root: &Path, beside_exe: &Path) -> Result<(), String> {
     ort_telemetry_off()?;
     if std::env::var_os("ORT_DYLIB_PATH").is_some() {
@@ -105,10 +116,11 @@ pub fn set_ort_dylib_env(repo_root: &Path, beside_exe: &Path) -> Result<(), Stri
     match found {
         Some(cand) => std::env::set_var("ORT_DYLIB_PATH", cand),
         None => {
-            let [gpu, cpu] = dub_core::runtime::ort_candidates(&repo_root.join("models"))
-                .try_into()
-                .expect("a GPU and a CPU build");
-            std::env::set_var("ORT_DYLIB_PATH", if hw::gpu_report().cuda13_ok { gpu } else { cpu });
+            let fallback = fallback_ort_candidate(
+                dub_core::runtime::ort_candidates(&repo_root.join("models")),
+                hw::gpu_report().cuda13_ok,
+            )?;
+            std::env::set_var("ORT_DYLIB_PATH", fallback);
             eprintln!("[ERROR] onnxruntime 1.28 not found in {}: recognition and diarization will not start until the ONNX Runtime component is downloaded", rt.display());
         }
     }
@@ -128,6 +140,40 @@ fn ort_telemetry_off() -> Result<(), String> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
+    #[test]
+    fn missing_ort_fallback_supports_a_single_platform_candidate() {
+        let candidate = PathBuf::from("onnxruntime.dylib");
+        assert_eq!(
+            super::fallback_ort_candidate(vec![candidate.clone()], true),
+            Ok(candidate.clone())
+        );
+        assert_eq!(
+            super::fallback_ort_candidate(vec![candidate.clone()], false),
+            Ok(candidate)
+        );
+    }
+
+    #[test]
+    fn missing_ort_fallback_preserves_gpu_and_cpu_preference() {
+        let gpu = PathBuf::from("gpu-runtime");
+        let cpu = PathBuf::from("cpu-runtime");
+        assert_eq!(
+            super::fallback_ort_candidate(vec![gpu.clone(), cpu.clone()], true),
+            Ok(gpu)
+        );
+        assert_eq!(
+            super::fallback_ort_candidate(vec![PathBuf::from("gpu-runtime"), cpu.clone()], false),
+            Ok(cpu)
+        );
+    }
+
+    #[test]
+    fn missing_ort_fallback_errors_when_no_candidate_is_defined() {
+        assert!(super::fallback_ort_candidate(Vec::new(), false).is_err());
+    }
+
     #[test]
     fn the_environment_turns_telemetry_off_once_and_keeps_it() {
         assert_eq!(super::ort_telemetry_off(), Ok(()));
